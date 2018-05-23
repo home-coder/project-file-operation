@@ -97,6 +97,7 @@ int main()
 #endif
 	fclose(fp);
 #endif
+
 #if 1
 	//TODO: 8765的存储，以二进制存储，以文本存储
 	int a = 8765999;
