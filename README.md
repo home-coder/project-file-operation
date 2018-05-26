@@ -16,14 +16,16 @@
 
 * 2.fprintf  fwrite对写入的处理, 如果不清楚看下面的**参考链接**  
 * 3.**读写之间要有刷新**, 对于一个可写可读流，是不能在一次读之后马上进行一次写，或者进行一次写之后马上进行一次读的，这可能会发生问题，需要在两个操作之间进行**至少一次刷新**，刷新的方法可以用fseek、rewind、fflush等等函数  
-* 4.关于fopen中参数的说明如r r+ r+b 等等[mode有下列几种形态字符串](https://blog.csdn.net/hjjph/article/details/7090770)
+* 4.关于fopen中参数的说明如r r+ r+b 等等[mode有下列几种形态字符串](https://blog.csdn.net/hjjph/article/details/7090770)  
+* 4.读写函数fread fwrite的**参数size nemb**一定要注意什么意思，不要写反了，会出大问题  
 
 ### 总结
 * 写一篇总结性的文章《论文本操作》  
 ##### **参考**：  
 [二进制方式和文本方式的区别](https://blog.csdn.net/renjiewen1995/article/details/52108645)  
 [fprintf与fwrite使用区别](https://blog.csdn.net/godenlove007/article/details/7721647)  
-[mmap和direct io和write和fwrite区别](https://blog.csdn.net/xiaofei0859/article/details/74674631?locationNum=10&fps=1)
+[mmap和direct io和write和fwrite区别](https://blog.csdn.net/xiaofei0859/article/details/74674631?locationNum=10&fps=1)  
+[glibc源码拜读 - printf](https://blog.csdn.net/InsZVA/article/details/54234201)
 
 ### 实践项目  
 1. 002.c: 打开一个文件，如果某一行存在hello world（中间匹配多个空格或者\t）， 则在这行行首四个字符替换为fuck  
@@ -46,7 +48,8 @@
 		  (2) 在没有插入fseek()或rewind()或碰到文件结束的情况下，读不可以直接跟在写后面.
 		  所以要转换读写状态
 ```
-2.c实现文本编辑器, 参考代码&nbsp;&nbsp;&nbsp;&nbsp;"edit.c"
+2.c实现文本编辑器, 参考代码&nbsp;&nbsp;&nbsp;&nbsp;"edit.c"和 "jedit.c"  
+文本编辑器是一个大坑，但是确实磨练字符的操作  
 
 #### 2. 利用struct stat， readdir, 等等Unix高级环境编程里面的函数来实现 find, ls, grep, cat, touch,等
 执行方式 shell# ./a.out -find file.txt
@@ -60,6 +63,13 @@
 ---
 ## 特殊说明
 ls等支持参数，如 ./a.out -ls -l  , grep -nIr hello  
+
+3. 将文本文件中的字符分为三种方式存储，比较其文件的大小  
+	1.直接按照字符存储为文本文件jcps_file1  
+	2.按照字符对应的ASCCI编码存储为二进制文件jcps_file2  
+	3.按照字符的出现次数来通过huffman方式编码为二进制存储jcps_file3  
+	Tips: 以上存储方式要确保存储本身的正确性，可以通过解码读取到原始数据  
+	难点：如果文本中如a可以当作65写，如果是汉字怎么办？ huffman的解码问题 ?  
 
  My 编程珠玑：
  > 根据编程网站的调查分析，所有工程代码统计的结果表明：30%的工作量是字符的操作，所以字符相关的操作一定要手到擒来
